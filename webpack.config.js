@@ -25,7 +25,7 @@ module.exports = {
   },
 
   devServer: {
-    hot: true,
+    hot: false,
     host: 'localhost',
     open: true,
     static: {
