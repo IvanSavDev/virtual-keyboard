@@ -68,12 +68,28 @@ const keyboardLayoutsWithCode = {
 
 const langLayout = ['en', 'ru'];
 const letterCase = ['lowerCase', 'upperCase'];
+
 export const countLetterInRows = [
   keyboardLayouts.en.lowerCase.length,
   keyboardLayouts.en.upperCase.length,
   keyboardLayouts.ru.lowerCase.length,
   keyboardLayouts.en.upperCase.length,
 ];
+
+export const specialCharacters = {
+  ArrowLeft: '◀',
+  ArrowRight: '▶',
+  ArrowUp: '▲',
+  ArrowDown: '▼',
+  Tab: '\u00A0\u00A0\u00A0\u00A0',
+  Enter: '\n',
+  Shift: '',
+  Alt: '',
+  Control: '',
+  CapsLock: '',
+  Meta: '',
+  Delete: '',
+};
 
 langLayout.forEach((lang) => {
   letterCase.forEach((letter) => {
@@ -85,5 +101,4 @@ langLayout.forEach((lang) => {
 });
 
 const getLayout = (eng = 'en', wordCase = 'lowerCase') => keyboardLayoutsWithCode[eng][wordCase];
-console.log(getLayout());
 export { getLayout, codeKeyboard, keyboardCodeRows };
