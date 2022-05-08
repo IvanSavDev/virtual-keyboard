@@ -1,9 +1,8 @@
 import { generateButtons, sampleContentBtn } from './button';
+import { keyboardCodeRows } from './symbol-keyboards';
 
 export const generateKeyboard = (currentLayout) => {
   const keyboardRows = document.querySelectorAll('.keyboard__row');
-  const keyboard = document.querySelector('.keyboard');
-  keyboard.classList.add('en');
 
   keyboardRows.forEach((element, index) => {
     const currentElement = element;
@@ -16,8 +15,9 @@ export const updateBtns = (currentLayout) => {
   keyboardRows.forEach((element, indexRow) => {
     const currentElement = Array.from(element.children);
     currentElement.forEach((btn, indexBtn) => {
+      const codeBtn = keyboardCodeRows[indexRow][indexBtn];
       const currentBtn = btn;
-      const currentContent = currentLayout[indexRow][indexBtn];
+      const currentContent = currentLayout[codeBtn];
       currentBtn.innerHTML = sampleContentBtn(currentContent);
     });
   });
