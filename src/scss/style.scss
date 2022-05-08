@@ -126,6 +126,23 @@ button {
 //   }
 // }
 
+@keyframes pressBtn {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.8);
+  }
+}
+
+@keyframes unpressBtn {
+  0% {
+    transform: scale(0.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 
 .keyboard {
   &__button {
@@ -142,8 +159,14 @@ button {
     cursor: pointer;
   }
 
-  &__button:active {
-    transform: scale(0.8);
+  &__button--press {
+    animation-name: pressBtn;
+    animation-fill-mode: forwards;
+  }
+
+  &__button--unpress {
+    animation-name: unpressBtn;
+    animation-fill-mode: forwards;
   }
 
   &__button[data-row='1'][data-btn='14'] {
