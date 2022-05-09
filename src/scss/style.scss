@@ -157,6 +157,7 @@ button {
     border-radius: 50%;
 
     cursor: pointer;
+    user-select: none;
   }
 
   &__button--press {
