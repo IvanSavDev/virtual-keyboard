@@ -19,7 +19,7 @@ module.exports = {
 
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[contenthash].js',
+    filename: '[name].js',
     assetModuleFilename: 'assets/[hash][ext][query]',
     clean: true, 
   },
@@ -69,7 +69,7 @@ module.exports = {
         template: './src/index.html',
       }),
       new MiniCssExtractPlugin({
-        filename: '[name].[contenthash].css',
+        filename: '[name].css',
       }),
       new ESLintPlugin(),
     ],
