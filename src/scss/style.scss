@@ -21,25 +21,6 @@ body {
   min-width: 320px;
 }
 
-// h1,
-// h2,
-// h3 {
-//   margin: 0;
-// }
-
-// p {
-//   margin: 0;
-// }
-
-// ol,
-// ul,
-// li {
-//   list-style-type: none;
-//   padding: 0;
-//   margin: 0;
-//   line-height: 0;
-// }
-
 button {
   cursor: pointer;
   border: none;
@@ -47,11 +28,6 @@ button {
   margin: 0;
   line-height: 0;
 }
-
-// a {
-//   text-decoration: none;
-//   color: $color-light-xl;
-// }
 
 .container-header {
   display: flex;
@@ -94,37 +70,6 @@ button {
     margin-left: 0;
   }
 }
-
-// .keyboard-layout {
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   align-items: center;
-//   height: 100%;
-// }
-
-// .first-row {
-//   &__button {
-//     width: 42px;
-//     height: 42px;
-//     margin-left: 5px;
-  
-//     border: 1px solid black;
-//     border-radius: 50%;
-//   }
-
-//   &__ru--disabled {
-//     display: none;
-//   }
-
-//   &__eng--disabled {
-//     display: none;
-//   }
-
-//   &__content {
-//     position: relative;
-//   }
-// }
 
 @keyframes pressBtn {
   0% {
@@ -211,3 +156,19 @@ button {
   }
 }
 
+.footer {
+  text-align: center;
+  font-size: 18px;
+
+  &__text {
+    margin-bottom: 5px;
+  }
+
+  &__text:first-child {
+    margin-top: 35px;
+  }
+
+  &__text:last-child {
+    margin-top: 0px;
+  }
+}
