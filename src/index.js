@@ -14,18 +14,24 @@ document.body.innerHTML = `<header class="container-header">
   <div class="keyboard__row"></div>
   <div class="keyboard__row"></div>
 </div>
+</div>
+<div class="footer">
+<p class="footer__text">Клавиатура создана в операционной системе Windows</p>
+<p class="footer__text">Для переключения языка комбинация: левыe ctrl + alt</p>
 </div>`;
 
-generateKeyboard(getLayout());
-
-const leftShift = document.querySelector('.keyboard__button[data-row=\'4\'][data-btn=\'1\'');
-const rightShift = document.querySelector('.keyboard__button[data-row=\'4\'][data-btn=\'13\'');
-const capsLock = document.querySelector('.keyboard__button[data-row=\'3\'][data-btn=\'1\'');
 const displayKeyboard = document.querySelector('.display-keyboard');
-const allBtns = document.querySelectorAll('.keyboard__button');
 
 let letterCase = 'lowerCase';
 let lang = 'en';
+
+const storageLang = localStorage.getItem('lang');
+
+lang = storageLang ?? 'en';
+
+localStorage.setItem('lang', lang);
+
+generateKeyboard(getLayout(lang));
 
 const changeLetterCase = () => {
   if (letterCase === 'lowerCase') {
@@ -39,33 +45,10 @@ let currentLayout = getLayout(lang, letterCase);
 
 const changeKeyboardLang = () => {
   lang = lang === 'en' ? 'ru' : 'en';
+  localStorage.setItem('lang', lang);
   currentLayout = getLayout(lang, letterCase);
   updateBtns(currentLayout);
 };
-
-allBtns.forEach((btn) => {
-  btn.addEventListener('mousedown', (key) => {
-    key.currentTarget.classList.remove('keyboard__button--unpress');
-    key.currentTarget.classList.add('keyboard__button--press');
-    key.preventDefault();
-    const currentCursor = displayKeyboard.selectionStart;
-    const firstPart = displayKeyboard.value.slice(0, currentCursor);
-    const secondPart = displayKeyboard.value.slice(currentCursor);
-    if (key.currentTarget.dataset.code === 'Delete') {
-      displayKeyboard.value = `${firstPart}${secondPart.slice(1)}`;
-      return;
-    }
-    const codeKey = key.currentTarget.dataset.code;
-
-    displayKeyboard.value = `${firstPart}${currentLayout[codeKey]}${secondPart.slice(0)}`;
-    displayKeyboard.setSelectionRange(currentCursor + 1, currentCursor + 1);
-  });
-  btn.addEventListener('mouseup', (key) => {
-    key.preventDefault();
-    key.currentTarget.classList.remove('keyboard__button--press');
-    key.currentTarget.classList.add('keyboard__button--unpress');
-  });
-});
 
 const activeShift = () => {
   changeLetterCase();
@@ -73,15 +56,70 @@ const activeShift = () => {
   updateBtns(currentLayout);
 };
 
-leftShift.addEventListener('mousedown', () => activeShift());
+let currentBtn;
+let pressBtn = false;
+const allBtns = document.querySelectorAll('.keyboard__button');
 
-leftShift.addEventListener('mouseup', () => activeShift());
+allBtns.forEach((btn) => {
+  btn.addEventListener('mousedown', (buttonKey) => {
+    displayKeyboard.focus();
+    pressBtn = true;
+    buttonKey.currentTarget.classList.remove('keyboard__button--unpress');
+    buttonKey.currentTarget.classList.add('keyboard__button--press');
+    buttonKey.preventDefault();
+    currentBtn = buttonKey.currentTarget;
+    const currentCursor = displayKeyboard.selectionStart;
+    const firstPart = displayKeyboard.value.slice(0, currentCursor);
+    const secondPart = displayKeyboard.value.slice(currentCursor);
 
-rightShift.addEventListener('mousedown', () => activeShift());
+    const currentCode = buttonKey.currentTarget.dataset.code;
 
-rightShift.addEventListener('mouseup', () => activeShift());
+    if (currentCode === 'CapsLock' || currentCode === 'ShiftLeft' || currentCode === 'ShiftRight') {
+      activeShift();
+    }
 
-capsLock.addEventListener('click', () => activeShift());
+    if (currentCode === 'Delete') {
+      displayKeyboard.value = `${firstPart}${secondPart.slice(1)}`;
+      displayKeyboard.setSelectionRange(currentCursor, currentCursor);
+      return;
+    }
+
+    if (currentCode === 'Backspace') {
+      displayKeyboard.value = `${firstPart.slice(0, -1)}${secondPart}`;
+      displayKeyboard.setSelectionRange(currentCursor - 1, currentCursor - 1);
+      return;
+    }
+
+    const currentValue = specialCharacters[currentCode] ?? currentLayout[currentCode];
+    displayKeyboard.value = `${firstPart}${currentValue}${secondPart.slice(0)}`;
+
+    if (currentCode === 'Tab') {
+      displayKeyboard.setSelectionRange(currentCursor + 4, currentCursor + 4);
+      return;
+    }
+
+    if (currentValue !== '') {
+      displayKeyboard.setSelectionRange(currentCursor + 1, currentCursor + 1);
+    }
+  });
+  btn.addEventListener('mouseup', (buttonKey) => {
+    const currentCode = buttonKey.currentTarget.dataset.code;
+    buttonKey.preventDefault();
+    buttonKey.currentTarget.classList.remove('keyboard__button--press');
+    buttonKey.currentTarget.classList.add('keyboard__button--unpress');
+    if (currentCode === 'ShiftLeft' || currentCode === 'ShiftRight') {
+      activeShift();
+    }
+  });
+});
+
+document.body.addEventListener('mouseup', () => {
+  if (pressBtn) {
+    currentBtn.classList.remove('keyboard__button--press');
+    currentBtn.classList.add('keyboard__button--unpress');
+  }
+  pressBtn = false;
+});
 
 let down = false;
 

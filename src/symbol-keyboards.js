@@ -85,6 +85,13 @@ export const specialCharacters = {
   CapsLock: '',
   Meta: '',
   Delete: '',
+  MetaLeft: '',
+  ControlLeft: '',
+  ControlRight: '',
+  AltLeft: '',
+  AltRight: '',
+  ShiftLeft: '',
+  ShiftRight: '',
 };
 
 langLayout.forEach((lang) => {
