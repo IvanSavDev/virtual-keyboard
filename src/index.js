@@ -17,7 +17,7 @@ document.body.innerHTML = `<header class="container-header">
 </div>
 <div class="footer">
 <p class="footer__text">Клавиатура создана в операционной системе Windows</p>
-<p class="footer__text">Для переключения языка комбинация: левыe ctrl + alt</p>
+<p class="footer__text">Для переключения языка комбинация: ctrl + alt</p>
 </div>`;
 
 const displayKeyboard = document.querySelector('.display-keyboard');
