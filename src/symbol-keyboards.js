@@ -5,16 +5,16 @@ const keyboardLayouts = {
         ['`', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '-', '=', 'back'],
         ['tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\'', 'del'],
         ['caps lock', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '"', 'enter'],
-        ['shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '&#x25B2', 'shift'],
-        ['ctrl', 'win', 'alt', ' ', 'alt', '&#x25C0', '&#x25BC', '&#x25B6', 'ctrl'],
+        ['shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '▲', 'shift'],
+        ['ctrl', 'win', 'alt', ' ', 'alt', '◀', '▼', '▶', 'ctrl'],
       ],
     upperCase:
       [
         ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', 'back'],
         ['tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '|', 'del'],
         ['caps lock', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ':', '"', 'enter'],
-        ['shift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', '&#x25B2', 'shift'],
-        ['ctrl', 'win', 'alt', ' ', 'alt', '&#x25C0', '&#x25BC', '&#x25B6', 'ctrl'],
+        ['shift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', '▲', 'shift'],
+        ['ctrl', 'win', 'alt', ' ', 'alt', '◀', '▼', '▶', 'ctrl'],
       ],
   },
 
@@ -24,16 +24,16 @@ const keyboardLayouts = {
         ['ё', 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, '-', '=', 'back'],
         ['tab', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', '\\', 'del'],
         ['caps lock', 'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'enter'],
-        ['shift', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '.', '&#x25B2', 'shift'],
-        ['ctrl', 'win', 'alt', ' ', 'alt', '&#x25C0', '&#x25BC', '&#x25B6', 'ctrl'],
+        ['shift', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', '.', '▲', 'shift'],
+        ['ctrl', 'win', 'alt', ' ', 'alt', '◀', '▼', '▶', 'ctrl'],
       ],
     upperCase:
       [
-        ['ё', '!', '"', '№', ';', '%', ':', '?', '*', '(', ')', '_', '+', 'back'],
-        ['tab', 'й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ', '\\', 'del'],
-        ['caps lock', 'ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'enter'],
-        ['shift', 'я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю', ',', '&#x25B2', 'shift'],
-        ['ctrl', 'win', 'alt', ' ', 'alt', '&#x25C0', '&#x25BC', '&#x25B6', 'ctrl'],
+        ['Ё', '!', '"', '№', ';', '%', ':', '?', '*', '(', ')', '_', '+', 'back'],
+        ['tab', 'Й', 'Ц', 'У', 'К', 'Е', 'Н', 'Г', 'Ш', 'Щ', 'З', 'Х', 'Ъ', '/', 'del'],
+        ['caps lock', 'Ф', 'Ы', 'В', 'А', 'П', 'Р', 'О', 'Л', 'Д', 'Ж', 'Э', 'enter'],
+        ['shift', 'Я', 'Ч', 'С', 'М', 'И', 'Т', 'Ь', 'Б', 'Ю', ',', '▲', 'shift'],
+        ['ctrl', 'win', 'alt', ' ', 'alt', '◀', '▼', '▶', 'ctrl'],
       ],
   },
 };
@@ -77,10 +77,6 @@ export const countLetterInRows = [
 ];
 
 export const specialCharacters = {
-  ArrowLeft: '◀',
-  ArrowRight: '▶',
-  ArrowUp: '▲',
-  ArrowDown: '▼',
   Tab: '\u00A0\u00A0\u00A0\u00A0',
   Enter: '\n',
   Shift: '',
@@ -100,5 +96,5 @@ langLayout.forEach((lang) => {
   });
 });
 
-const getLayout = (eng = 'en', wordCase = 'lowerCase') => keyboardLayoutsWithCode[eng][wordCase];
+const getLayout = (en = 'en', wordCase = 'lowerCase') => keyboardLayoutsWithCode[en][wordCase];
 export { getLayout, codeKeyboard, keyboardCodeRows };

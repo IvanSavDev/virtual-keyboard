@@ -1,13 +1,12 @@
 import './scss/style.scss';
 import { generateKeyboard, updateBtns } from './keyboard';
-import { getLayout } from './symbol-keyboards';
+import { getLayout, specialCharacters } from './symbol-keyboards';
 
 document.body.innerHTML = `<header class="container-header">
 <h1 class="header">Virtual keyboard</h1>
 </header>
 <div class="container-keyboard">
-<textarea class="display-keyboard" cols="100" rows="10" placeholder="Text will appear here..." autofocus
-></textarea>
+<textarea class="display-keyboard" cols="100" rows="10" placeholder="Text will appear here..." autofocus></textarea>
 <div class="keyboard">
   <div class="keyboard__row"></div>
   <div class="keyboard__row"></div>
@@ -26,7 +25,7 @@ const displayKeyboard = document.querySelector('.display-keyboard');
 const allBtns = document.querySelectorAll('.keyboard__button');
 
 let letterCase = 'lowerCase';
-const lang = 'en';
+let lang = 'en';
 
 const changeLetterCase = () => {
   if (letterCase === 'lowerCase') {
@@ -38,52 +37,117 @@ const changeLetterCase = () => {
 
 let currentLayout = getLayout(lang, letterCase);
 
-// const changeLang = () => (lang === 'en' ? 'ru' : 'en');
+const changeKeyboardLang = () => {
+  lang = lang === 'en' ? 'ru' : 'en';
+  currentLayout = getLayout(lang, letterCase);
+  updateBtns(currentLayout);
+};
 
 allBtns.forEach((btn) => {
-  btn.addEventListener('click', (key) => {
+  btn.addEventListener('mousedown', (key) => {
+    key.currentTarget.classList.remove('keyboard__button--unpress');
+    key.currentTarget.classList.add('keyboard__button--press');
+    key.preventDefault();
+    const currentCursor = displayKeyboard.selectionStart;
+    const firstPart = displayKeyboard.value.slice(0, currentCursor);
+    const secondPart = displayKeyboard.value.slice(currentCursor);
+    if (key.currentTarget.dataset.code === 'Delete') {
+      displayKeyboard.value = `${firstPart}${secondPart.slice(1)}`;
+      return;
+    }
     const codeKey = key.currentTarget.dataset.code;
-    // if (content !== 'shift') {
-    //   displayKeyboard.value += content;
-    // }
-    displayKeyboard.value += currentLayout[codeKey];
+
+    displayKeyboard.value = `${firstPart}${currentLayout[codeKey]}${secondPart.slice(0)}`;
+    displayKeyboard.setSelectionRange(currentCursor + 1, currentCursor + 1);
+  });
+  btn.addEventListener('mouseup', (key) => {
+    key.preventDefault();
+    key.currentTarget.classList.remove('keyboard__button--press');
+    key.currentTarget.classList.add('keyboard__button--unpress');
   });
 });
 
 const activeShift = () => {
-  // const keyboard = document.querySelector('.keyboard');
-  // const currentLetterCase = changeLetterCase();
   changeLetterCase();
   currentLayout = getLayout(lang, letterCase);
   updateBtns(currentLayout);
 };
 
-leftShift.addEventListener('pointerdown', () => activeShift());
+leftShift.addEventListener('mousedown', () => activeShift());
 
-leftShift.addEventListener('pointerup', () => activeShift());
+leftShift.addEventListener('mouseup', () => activeShift());
 
 rightShift.addEventListener('mousedown', () => activeShift());
 
-rightShift.addEventListener('pointerup', () => activeShift());
+rightShift.addEventListener('mouseup', () => activeShift());
 
 capsLock.addEventListener('click', () => activeShift());
 
-// document.addEventListener('keydown', (e) => {
-//   displayKeyboard.focus();
-//   if (e.code === 'CapsLock' || e.code === 'Shift') {
-//     activeShift();
-//   }
-//   if (!['Shift', 'CapsLock', 'Alt', 'Ctrl', 'Tab', 'Enter'].includes(e.key)) {
-//     displayKeyboard.value += e.key;
-//   }
-// });
+let down = false;
 
-document.addEventListener('keyup', (button) => {
-  console.log(button);
-  if (button.code === 'CapsLock' || button.code === 'Shift') {
+const setKey = new Set();
+
+document.addEventListener('keydown', (keyboardKey) => {
+  const keyboardButton = document.querySelector(`.keyboard__button[data-code='${keyboardKey.code}']`);
+  keyboardButton.classList.remove('keyboard__button--unpress');
+  keyboardButton.classList.add('keyboard__button--press');
+  displayKeyboard.focus();
+  setKey.add(keyboardKey.key);
+  keyboardKey.preventDefault();
+
+  const currentCursor = displayKeyboard.selectionStart;
+  const firstPart = displayKeyboard.value.slice(0, currentCursor);
+  const secondPart = displayKeyboard.value.slice(currentCursor);
+
+  if (setKey.has('Control') && setKey.has('Alt')) {
+    changeKeyboardLang();
+    setKey.clear();
+    return;
+  }
+
+  if (keyboardKey.key === 'CapsLock') {
     activeShift();
   }
-  if (!['Shift', 'CapsLock', 'Alt', 'Ctrl', 'Tab', 'Enter'].includes(button.key)) {
-    displayKeyboard.value += currentLayout[button.code];
+
+  if (keyboardKey.key === 'Shift') {
+    if (down) return;
+    down = true;
+    activeShift();
   }
+
+  if (keyboardKey.key === 'Delete') {
+    displayKeyboard.value = `${firstPart}${secondPart.slice(1)}`;
+    displayKeyboard.setSelectionRange(currentCursor, currentCursor);
+    return;
+  }
+
+  if (keyboardKey.key === 'Backspace') {
+    displayKeyboard.value = `${firstPart.slice(0, -1)}${secondPart}`;
+    displayKeyboard.setSelectionRange(currentCursor - 1, currentCursor - 1);
+    return;
+  }
+
+  const currentValue = specialCharacters[keyboardKey.key] ?? currentLayout[keyboardKey.code];
+  displayKeyboard.value = `${firstPart}${currentValue}${secondPart.slice(0)}`;
+
+  if (keyboardKey.key === 'Tab') {
+    displayKeyboard.setSelectionRange(currentCursor + 4, currentCursor + 4);
+    return;
+  }
+
+  if (currentValue !== '') {
+    displayKeyboard.setSelectionRange(currentCursor + 1, currentCursor + 1);
+  }
+});
+
+document.addEventListener('keyup', (keyboardKey) => {
+  keyboardKey.preventDefault();
+  if (keyboardKey.key === 'Shift') {
+    down = false;
+    activeShift();
+  }
+  const keyboardButton = document.querySelector(`.keyboard__button[data-code='${keyboardKey.code}']`);
+  keyboardButton.classList.remove('keyboard__button--press');
+  keyboardButton.classList.add('keyboard__button--unpress');
+  setKey.delete(keyboardKey.key);
 });
